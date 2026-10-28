@@ -23,8 +23,8 @@ class TrackArtistOrderSelector extends ConsumerWidget {
             dropdownItems: TrackArtistOrder.values
                 .map((order) => DropdownMenuEntry(value: order, label: order.toLocalisedString(context.l10n)))
                 .toList(),
-            onSelected: (order) {
-              if (order != null) FinampSetters.setTrackArtistOrder(order);
+            onSelected: (order) async {
+              if (order != null) await FinampSettingsHelper.setTrackArtistOrder(order);
             },
           ),
         ],

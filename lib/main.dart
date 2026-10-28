@@ -53,6 +53,7 @@ import 'package:finamp/services/keep_screen_on_helper.dart';
 import 'package:finamp/services/music_providers.dart';
 import 'package:finamp/services/network_manager.dart';
 import 'package:finamp/services/offline_listen_helper.dart';
+import 'package:finamp/services/penguin_track_artist_order_settings.dart';
 import 'package:finamp/services/playback_history_service.dart';
 import 'package:finamp/services/playon_service.dart';
 import 'package:finamp/services/queue_service.dart';
@@ -328,6 +329,9 @@ Future<void> setupHive() async {
   if (finampSettingsBox.isEmpty) {
     await finampSettingsBox.put("FinampSettings", await FinampSettings.create());
   }
+
+  // Native artist-order backport only; original/feature-off builds ignore this box.
+  await PenguinTrackArtistOrderSettings.openAndRestore();
 
   final compactFile = File(path_helper.join(dir.path, "$isarDatabaseName.isar.compact"));
   if (compactFile.existsSync()) {

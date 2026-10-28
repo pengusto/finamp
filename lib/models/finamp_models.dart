@@ -972,7 +972,8 @@ class FinampSettings {
   @SettingsHelperMap("tabContentType")
   Map<ContentType, ContentViewType> perTabContentViewType;
 
-  @HiveField(161, defaultValue: DefaultSettings.trackArtistOrder)
+  // Native backport only: persisted separately by PenguinTrackArtistOrderSettings.
+  // Keep the original 1.0.1 Hive schema readable when this patch is removed.
   TrackArtistOrder trackArtistOrder;
 
   static Future<FinampSettings> create() async {
@@ -4473,6 +4474,7 @@ enum FinampQuickActions {
   surpriseMe(true),
   @HiveField(9)
   playSpecificItem(true);
+
   // ID 10 moved upwards for more sensible user-facing ordering
   //TODO support album/artist shuffle (requires queue support)
 
@@ -4850,15 +4852,10 @@ class ClientCertificate {
   final String password;
 }
 
-@HiveType(typeId: 128)
 enum TrackArtistOrder {
-  @HiveField(0)
   albumArtistsFirst,
-  @HiveField(1)
   metadata,
-  @HiveField(2)
   firstArtistFirst,
-  @HiveField(3)
   alphabetical;
 
   String toLocalisedString(AppLocalizations l10n) => switch (this) {
