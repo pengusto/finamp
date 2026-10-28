@@ -1,0 +1,69 @@
+{
+  "before": "b72ba46a45eb45836516f23e3df989c89c693c88",
+  "after": "ec109989ace6143377567a1ec71664ec6863dcc3",
+  "flutter": "3.47.8",
+  "dart": "3.13.7",
+  "synthetic_widget_captures": true,
+  "live_jellyfin": false,
+  "before_capture_tests_passed": 3,
+  "after_capture_tests_passed": 4,
+  "combined_app_tests_passed": 78,
+  "images": [
+    {
+      "file": "artist-loading-after.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 75359,
+      "sha256": "bbd787a3745ca6675ac40f127b9a36cdadb60bf6e8f7cd8c53dccda62df43b0b",
+      "isolated_replay_identical": true
+    },
+    {
+      "file": "artist-loading-before.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 22496,
+      "sha256": "d79eeb749342fa9bb45f564f0b743b9b0216c2a4b2d1c2effddad032593e741c",
+      "isolated_replay_identical": true
+    },
+    {
+      "file": "artist-order-after.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 35810,
+      "sha256": "14b22d3c3c09dc58f046baac5ee5e74747d8f7b65c0589ac622fcde24a015376",
+      "isolated_replay_identical": true
+    },
+    {
+      "file": "artist-order-before.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 35986,
+      "sha256": "f65ead4cc294c11c77f76382f7cd77d9e93117f5d92f6878db53f7df41efb86b",
+      "isolated_replay_identical": true
+    },
+    {
+      "file": "artist-order-settings-after.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 36320,
+      "sha256": "c311d6ec8b1f3ba2f0e1ffb7816aea05144bfcfd60d4c125e56a6856e4a0c6cd",
+      "isolated_replay_identical": true
+    },
+    {
+      "file": "title-validation-after.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 32234,
+      "sha256": "4963ef69ea35229866a112615834d307ae808af58038873d7c31cbf2ba598668",
+      "isolated_replay_identical": true
+    },
+    {
+      "file": "title-validation-before.png",
+      "width": 540,
+      "height": 960,
+      "bytes": 35630,
+      "sha256": "e1ea48ea543b58aa7870297b819bcc3b369d72994d25f14d2f8293b91724a3e5",
+      "isolated_replay_identical": true
+    }
+  ]
+}
