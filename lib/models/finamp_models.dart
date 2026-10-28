@@ -191,6 +191,7 @@ class DefaultSettings {
   static const playOnReconnectionDelay = 5;
   static const enablePlayon = true;
   static const showArtistChipImage = true;
+  static const trackArtistOrder = TrackArtistOrder.albumArtistsFirst;
   static const trackOfflineFavorites = true;
   static const showProgressOnNowPlayingBar = true;
   static const startInstantMixForIndividualTracks = false;
@@ -466,6 +467,7 @@ class FinampSettings {
     this.clientCertificate = DefaultSettings.clientCertificate,
     this.showQuickActionsBanner = DefaultSettings.showQuickActionsBanner,
     this.perTabContentViewType = DefaultSettings.perTabContentViewType,
+    this.trackArtistOrder = DefaultSettings.trackArtistOrder,
   });
 
   @HiveField(0, defaultValue: DefaultSettings.isOffline)
@@ -969,6 +971,10 @@ class FinampSettings {
   @HiveField(160, defaultValue: DefaultSettings.perTabContentViewType)
   @SettingsHelperMap("tabContentType")
   Map<ContentType, ContentViewType> perTabContentViewType;
+
+  // Native backport only: persisted separately by PenguinTrackArtistOrderSettings.
+  // Keep the original 1.0.1 Hive schema readable when this patch is removed.
+  TrackArtistOrder trackArtistOrder;
 
   static Future<FinampSettings> create() async {
     final downloadLocation = await DownloadLocation.create(
@@ -4468,6 +4474,7 @@ enum FinampQuickActions {
   surpriseMe(true),
   @HiveField(9)
   playSpecificItem(true);
+
   // ID 10 moved upwards for more sensible user-facing ordering
   //TODO support album/artist shuffle (requires queue support)
 
@@ -4843,4 +4850,18 @@ class ClientCertificate {
 
   @HiveField(1)
   final String password;
+}
+
+enum TrackArtistOrder {
+  albumArtistsFirst,
+  metadata,
+  firstArtistFirst,
+  alphabetical;
+
+  String toLocalisedString(AppLocalizations l10n) => switch (this) {
+    albumArtistsFirst => l10n.trackArtistOrderAlbumArtistsFirst,
+    metadata => l10n.trackArtistOrderMetadata,
+    firstArtistFirst => l10n.trackArtistOrderFirstArtistFirst,
+    alphabetical => l10n.trackArtistOrderAlphabetical,
+  };
 }
