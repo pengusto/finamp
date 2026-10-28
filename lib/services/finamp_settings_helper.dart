@@ -12,6 +12,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../models/finamp_models.dart';
 import '../models/jellyfin_models.dart';
+import 'penguin_track_artist_order_settings.dart';
 
 part 'finamp_settings_helper.g.dart';
 
@@ -47,6 +48,17 @@ class FinampSettingsHelper {
 
   static void overwriteFinampSettings(FinampSettings newFinampSettings) {
     Hive.box<FinampSettings>("FinampSettings").put("FinampSettings", newFinampSettings);
+  }
+
+  /// Saves the native backport preference outside the original settings payload.
+  /// Re-put the cached settings to notify the existing provider and listenables.
+  static Future<void> setTrackArtistOrder(TrackArtistOrder order) async {
+    final settings = finampSettings;
+    settings.trackArtistOrder = order;
+    await Future.wait([
+      PenguinTrackArtistOrderSettings.save(order),
+      Hive.box<FinampSettings>("FinampSettings").put("FinampSettings", settings),
+    ]);
   }
 
   static void resetTabsSettings() {
@@ -121,7 +133,7 @@ class FinampSettingsHelper {
     Hive.box<FinampSettings>("FinampSettings").put("FinampSettings", finampSettingsTemp);
   }
 
-  static void resetLayoutSettings() {
+  static Future<void> resetLayoutSettings() {
     FinampSettings finampSettingsTemp = finampSettings;
 
     FinampSetters.setThemeMode(DefaultSettings.themeMode);
@@ -140,7 +152,7 @@ class FinampSettingsHelper {
     finampSettingsTemp.autoSwitchItemCurationType = DefaultSettings.autoSwitchItemCurationType;
     finampSettingsTemp.useMonochromeIcon = DefaultSettings.useMonochromeIcon;
 
-    Hive.box<FinampSettings>("FinampSettings").put("FinampSettings", finampSettingsTemp);
+    return setTrackArtistOrder(DefaultSettings.trackArtistOrder);
   }
 
   static void resetHomeScreenSettings() {
