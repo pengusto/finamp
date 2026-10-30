@@ -10,8 +10,10 @@ import 'package:finamp/menus/components/menuEntries/clear_queue_menu_entry.dart'
 import 'package:finamp/menus/components/menuEntries/create_playlist_from_current_queue.dart';
 import 'package:finamp/menus/components/menuEntries/delete_from_server_menu_entry.dart';
 import 'package:finamp/menus/components/menuEntries/instant_mix_menu_entry.dart';
+import 'package:finamp/menus/components/menuEntries/lyrics_menu_entry.dart';
 import 'package:finamp/menus/components/menuEntries/menu_entry.dart';
 import 'package:finamp/menus/components/menuEntries/output_menu_entry.dart';
+import 'package:finamp/menus/components/menuEntries/queue_menu_entry.dart';
 import 'package:finamp/menus/components/menuEntries/remove_from_current_playlist_menu_entry.dart';
 import 'package:finamp/menus/components/menuEntries/remove_from_queue_menbu_entry.dart';
 import 'package:finamp/menus/components/menuEntries/restore_queue_menu_entry.dart';
@@ -49,6 +51,7 @@ Future<void> showModalTrackMenu({
   required BuildContext context,
   required BaseItemDto item,
   bool showPlaybackControls = false,
+  bool showHiddenPlayerActions = false,
   BaseItemDto? parentItem,
   VoidCallback? onRemoveFromList,
   bool confirmPlaylistRemoval = true,
@@ -67,6 +70,7 @@ Future<void> showModalTrackMenu({
         item: item,
         parentItem: parentItem,
         showPlaybackControls: showPlaybackControls,
+        showHiddenPlayerActions: showHiddenPlayerActions,
         onRemoveFromList: onRemoveFromList,
         confirmPlaylistRemoval: confirmPlaylistRemoval,
         showQueueActions: showQueueActions,
@@ -89,6 +93,7 @@ class TrackMenu extends ConsumerStatefulWidget {
     super.key,
     required this.item,
     required this.showPlaybackControls,
+    this.showHiddenPlayerActions = false,
     required this.onRemoveFromList,
     required this.confirmPlaylistRemoval,
     required this.showQueueActions,
@@ -103,6 +108,9 @@ class TrackMenu extends ConsumerStatefulWidget {
   final BaseItemDto item;
   final BaseItemDto? parentItem;
   final bool showPlaybackControls;
+
+  /// Replaces the bottom actions when the player layout cannot show them.
+  final bool showHiddenPlayerActions;
   final VoidCallback? onRemoveFromList;
   final bool confirmPlaylistRemoval;
   final bool showQueueActions;
@@ -227,7 +235,7 @@ class _TrackMenuState extends ConsumerState<TrackMenu> with TickerProviderStateM
     );
 
     final metadata = ref.watch(currentTrackMetadataProvider).unwrapPrevious();
-    return widget.childBuilder(stackHeight, menu(context, menuEntries, metadata.value));
+    return widget.childBuilder(stackHeight, menu(context, menuEntries, metadata.valueOrNull));
   }
 
   // Normal track menu entries, excluding headers
@@ -239,7 +247,6 @@ class _TrackMenuState extends ConsumerState<TrackMenu> with TickerProviderStateM
     }
 
     return [
-      if (widget.showPlaybackControls) const OutputMenuEntry(),
       if (widget.queueInfo != null) RestoreQueueMenuEntry(queueInfo: widget.queueInfo!),
       AddToPlaylistMenuEntry(item: playableItem, queueItem: queueItem),
       RemoveFromCurrentPlaylistMenuEntry(
@@ -257,6 +264,11 @@ class _TrackMenuState extends ConsumerState<TrackMenu> with TickerProviderStateM
       if (widget.showQueueActions) ClearQueueMenuEntry(baseItem: widget.item),
       DeleteFromServerMenuEntry(baseItem: widget.item),
       RemoveFromQueueMenuEntry(queueItem: widget.queueItem),
+      if (widget.showPlaybackControls && widget.showHiddenPlayerActions) ...[
+        const OutputMenuEntry(),
+        const QueueMenuEntry(),
+        const LyricsMenuEntry(),
+      ],
     ];
   }
 
