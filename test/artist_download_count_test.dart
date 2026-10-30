@@ -159,7 +159,8 @@ void main() {
     tester,
   ) async {
     await mount(tester);
-    expect(find.text('Loading…', findRichText: true), findsOneWidget);
+    final loading = AppLocalizations.of(tester.element(find.byType(ArtistScreenContent)))!.loading;
+    expect(find.text(loading, findRichText: true), findsOneWidget);
     expect(find.byType(DownloadButton), findsOneWidget);
     expect(downloads.childCounts.last, isNull);
     expect(tester.widget<DownloadButton>(find.byType(DownloadButton)).downloadDisabled, isFalse);
