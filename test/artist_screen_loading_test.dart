@@ -291,7 +291,10 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.byIcon(Icons.music_note), findsOneWidget);
-      if (count == null) expect(find.text('Loading…', findRichText: true), findsOneWidget);
+      if (count == null) {
+        final loading = AppLocalizations.of(tester.element(find.byType(ArtistItemInfo)))!.loading;
+        expect(find.text(loading, findRichText: true), findsOneWidget);
+      }
       expect(find.text('498 Albums', findRichText: true), findsOneWidget);
       if (count != null) expect(find.text('$count Tracks', findRichText: true), findsOneWidget);
     });
