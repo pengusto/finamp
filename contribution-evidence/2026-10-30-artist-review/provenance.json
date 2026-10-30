@@ -1,0 +1,14 @@
+{
+  "before": "8d6b4b6868481175339137a32d057055e103289e",
+  "after": "3f463b0e697f11aeebc37e1a6b614cde391b7f7f",
+  "flutter": "3.47.8",
+  "dart": "3.13.7",
+  "captures": "Actual ArtistScreenContent; fake service boundaries, one album/three tracks plus one guest, preview disabled in both revisions; no live UI speed benchmark.",
+  "api_server": "12.3.0",
+  "api_checks": 12,
+  "files": {
+    "artist-after-loading.png": "2f05bd32d37aa5cd44d596705db9ed7c2e2399a01d688464027faa863e7c1d75",
+    "artist-before-loading.png": "1e517044eb1994ece793de5965c83d1503c5d8f6aa368696624872dc675ebf56",
+    "artist-after-loaded.png": "37f6946481599d61a526f3346a244c2bddd0bb93d509e1eb403d96567a74f94e"
+  }
+}

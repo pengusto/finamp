@@ -1,0 +1,255 @@
+{
+  "server_version": "12.3.0",
+  "fixture_tracks": [
+    {
+      "library": "main",
+      "album": "Own Album",
+      "title": "Both Rock",
+      "track_artist": "Probe Target",
+      "album_artist": "Probe Target",
+      "genre": "Rock"
+    },
+    {
+      "library": "main",
+      "album": "Own Album",
+      "title": "Album Only",
+      "track_artist": "Probe Other",
+      "album_artist": "Probe Target",
+      "genre": "Rock"
+    },
+    {
+      "library": "main",
+      "album": "Own Album",
+      "title": "Both Jazz",
+      "track_artist": "Probe Target",
+      "album_artist": "Probe Target",
+      "genre": "Jazz"
+    },
+    {
+      "library": "main",
+      "album": "Guest Album",
+      "title": "Guest Only",
+      "track_artist": "Probe Target",
+      "album_artist": "Probe Other",
+      "genre": "Rock"
+    },
+    {
+      "library": "main",
+      "album": "Guest Album",
+      "title": "Unrelated",
+      "track_artist": "Probe Other",
+      "album_artist": "Probe Other",
+      "genre": "Rock"
+    },
+    {
+      "library": "other",
+      "album": "Other Library Album",
+      "title": "Other Library",
+      "track_artist": "Probe Target",
+      "album_artist": "Probe Target",
+      "genre": "Rock"
+    }
+  ],
+  "expected_main_library": {
+    "union": 4,
+    "album_artist": 3,
+    "track_artist": 3,
+    "both": 2,
+    "contributing": 1
+  },
+  "checks": [
+    {
+      "label": "union",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9"
+      },
+      "total": 4,
+      "returned": 4,
+      "names": [
+        "Album Only",
+        "Both Jazz",
+        "Both Rock",
+        "Guest Only"
+      ]
+    },
+    {
+      "label": "unscoped union",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9"
+      },
+      "total": 5,
+      "returned": 5,
+      "names": [
+        "Album Only",
+        "Both Jazz",
+        "Both Rock",
+        "Guest Only",
+        "Other Library"
+      ]
+    },
+    {
+      "label": "empty valid-filter count",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "GenreIds": "2140463cde27a6027db244a43a5f704a",
+        "IsFavorite": "true",
+        "Limit": 1,
+        "Fields": ""
+      },
+      "total": 0,
+      "returned": 0,
+      "names": []
+    },
+    {
+      "label": "nonexistent artist ID (server ignores filter)",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "0000000000000000000000000000018320",
+        "Limit": 1
+      },
+      "total": 5,
+      "returned": 1,
+      "names": [
+        "Album Only"
+      ]
+    },
+    {
+      "label": "album artist",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "AlbumArtistIds": "26d770b964fe3025982f7d23ad39cfe9"
+      },
+      "total": 3,
+      "returned": 3,
+      "names": [
+        "Album Only",
+        "Both Jazz",
+        "Both Rock"
+      ]
+    },
+    {
+      "label": "contributing (track-only)",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ContributingArtistIds": "26d770b964fe3025982f7d23ad39cfe9"
+      },
+      "total": 1,
+      "returned": 1,
+      "names": [
+        "Guest Only"
+      ]
+    },
+    {
+      "label": "bounded count",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "Limit": 1,
+        "Fields": ""
+      },
+      "total": 4,
+      "returned": 1,
+      "names": [
+        "Album Only"
+      ]
+    },
+    {
+      "label": "genre-scoped union",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "GenreIds": "56fb6975193af0b35d4dc8edf77a419d"
+      },
+      "total": 3,
+      "returned": 3,
+      "names": [
+        "Album Only",
+        "Both Rock",
+        "Guest Only"
+      ]
+    },
+    {
+      "label": "album AND union",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "AlbumArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9"
+      },
+      "total": 3,
+      "returned": 3,
+      "names": [
+        "Album Only",
+        "Both Jazz",
+        "Both Rock"
+      ]
+    },
+    {
+      "label": "album AND contributing",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "AlbumArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "ContributingArtistIds": "26d770b964fe3025982f7d23ad39cfe9"
+      },
+      "total": 0,
+      "returned": 0,
+      "names": []
+    },
+    {
+      "label": "favorites-scoped union",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "IsFavorite": "true",
+        "Limit": 5
+      },
+      "total": 1,
+      "returned": 1,
+      "names": [
+        "Guest Only"
+      ]
+    },
+    {
+      "label": "legacy download filter",
+      "query": {
+        "Recursive": "true",
+        "IncludeItemTypes": "Audio",
+        "ParentId": "3aa401ca88dec7844fd77a5edfb87809",
+        "ArtistIds": "26d770b964fe3025982f7d23ad39cfe9",
+        "Filters": "Artist=Probe Target"
+      },
+      "total": 4,
+      "returned": 4,
+      "names": [
+        "Album Only",
+        "Both Jazz",
+        "Both Rock",
+        "Guest Only"
+      ]
+    }
+  ],
+  "limitations": "Synthetic silent FLACs on a real isolated server; not a latency/RAM benchmark."
+}
