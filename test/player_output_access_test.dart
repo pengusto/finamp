@@ -300,7 +300,11 @@ void main() {
     positionSubscription = AudioService.position.listen((_) {});
     const font = String.fromEnvironment('EVIDENCE_FONT');
     if (font.isNotEmpty) {
-      await (FontLoader('Roboto')..addFont(Future.value(ByteData.sublistView(File(font).readAsBytesSync())))).load();
+      final bytes = ByteData.sublistView(File(font).readAsBytesSync());
+      // The bottom sheet creates its own ThemeData, including Apple's font family.
+      for (final family in ['Roboto', '.AppleSystemUIFont']) {
+        await (FontLoader(family)..addFont(Future.value(bytes))).load();
+      }
       final manifest = jsonDecode(await rootBundle.loadString('FontManifest.json')) as List<dynamic>;
       for (final family in manifest) {
         final loader = FontLoader(family['family'] as String);
@@ -418,6 +422,30 @@ void main() {
       expect(find.byType(QueueList), disabled ? findsNothing : findsOneWidget);
     }, variant: nativeTarget);
   }
+  testWidgets('lyrics menu keeps Output and Queue without opening duplicate lyrics routes', (tester) async {
+    final log = await mount(tester);
+    await tester.ensureVisible(menuTile('Lyrics'));
+    await tester.tap(menuTile('Lyrics'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(PlayerButtonsMore));
+    await tester.pumpAndSettle();
+    expect(menuTile('Output'), findsOneWidget);
+    expect(menuTile('Queue'), findsOneWidget);
+    expect(menuTile('Lyrics'), findsNothing);
+    await tester.tap(menuTile('Output'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TrackMenu), findsNothing);
+    expect(log.routes.map((route) => route.settings.name), [
+      '/',
+      PlayerScreen.routeName,
+      LyricsScreen.routeName,
+      outputMenuRouteName,
+    ]);
+    log.routes.last.navigator!.pop();
+    await tester.pumpAndSettle();
+    expect(find.byType(LyricsScreen), findsOneWidget);
+    expect(log.routes.length, 3);
+  }, variant: nativeTarget);
   if (const String.fromEnvironment('EVIDENCE_DIR').isNotEmpty) {
     for (final hidden in [false, true]) {
       testWidgets('capture player menu hidden=$hidden', (tester) async {

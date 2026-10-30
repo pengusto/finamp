@@ -27,6 +27,7 @@ import 'package:finamp/menus/components/speed_menu.dart';
 import 'package:finamp/menus/sleep_timer_menu.dart';
 import 'package:finamp/models/finamp_models.dart';
 import 'package:finamp/models/jellyfin_models.dart';
+import 'package:finamp/screens/lyrics_screen.dart';
 import 'package:finamp/services/current_track_metadata_provider.dart';
 import 'package:finamp/services/feedback_helper.dart';
 import 'package:finamp/services/finamp_settings_helper.dart';
@@ -60,6 +61,7 @@ Future<void> showModalTrackMenu({
   FinampQueueItem? queueItem,
   QueueItemSource? source,
 }) async {
+  final showLyricsAction = ModalRoute.of(context)?.settings.name != LyricsScreen.routeName;
   await showThemedBottomSheet<void>(
     context: context,
     item: item,
@@ -71,6 +73,7 @@ Future<void> showModalTrackMenu({
         parentItem: parentItem,
         showPlaybackControls: showPlaybackControls,
         showHiddenPlayerActions: showHiddenPlayerActions,
+        showLyricsAction: showLyricsAction,
         onRemoveFromList: onRemoveFromList,
         confirmPlaylistRemoval: confirmPlaylistRemoval,
         showQueueActions: showQueueActions,
@@ -94,6 +97,7 @@ class TrackMenu extends ConsumerStatefulWidget {
     required this.item,
     required this.showPlaybackControls,
     this.showHiddenPlayerActions = false,
+    this.showLyricsAction = true,
     required this.onRemoveFromList,
     required this.confirmPlaylistRemoval,
     required this.showQueueActions,
@@ -111,6 +115,7 @@ class TrackMenu extends ConsumerStatefulWidget {
 
   /// Replaces the bottom actions when the player layout cannot show them.
   final bool showHiddenPlayerActions;
+  final bool showLyricsAction;
   final VoidCallback? onRemoveFromList;
   final bool confirmPlaylistRemoval;
   final bool showQueueActions;
@@ -267,7 +272,7 @@ class _TrackMenuState extends ConsumerState<TrackMenu> with TickerProviderStateM
       if (widget.showPlaybackControls && widget.showHiddenPlayerActions) ...[
         const OutputMenuEntry(),
         const QueueMenuEntry(),
-        const LyricsMenuEntry(),
+        if (widget.showLyricsAction) const LyricsMenuEntry(),
       ],
     ];
   }
